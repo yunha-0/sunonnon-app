@@ -71,7 +71,7 @@ with outer_center:
     label_col, slider_col = st.columns([0.08, 0.92])
     label_placeholder = label_col.empty()
     label_placeholder.markdown(
-        "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(16px);'>θ</h3></div>",
+        "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(16px); font-size:28px;'>θ</h3></div>",
         unsafe_allow_html=True
     )
 
@@ -79,7 +79,7 @@ with outer_center:
     tick_labels = ['0', 'π/2=1.57', 'π=3.14', '3π/2=4.71', '2π=6.28']
 
     def render_slider_ticks():
-        tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-left:2%;">'
+        tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:18px; color:#666; margin-left:2%;">'
         for i, label in enumerate(tick_labels):
             if i == 0 or i == len(tick_labels) - 1:
                 tick_html += f'<span style="transform:translateX(0);">{label}</span>'
@@ -95,7 +95,7 @@ with outer_center:
     # 현재 θ 값 표시
     current_theta = format_radian_label(angle_rad)
     st.markdown(
-        f"<p style='text-align:center; font-size:16px; margin-top:8px; color:red;'><strong>θ = {current_theta}</strong></p>",
+        f"<p style='text-align:center; font-size:24px; margin-top:12px; color:red;'><strong>θ = {current_theta}</strong></p>",
         unsafe_allow_html=True
     )
 
