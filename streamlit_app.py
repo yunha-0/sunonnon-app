@@ -76,7 +76,7 @@ with outer_center:
     )
 
     # 슬라이더 위/아래 눈금 추가
-    tick_labels = ['0', 'π/2', 'π', '3π/2', '2π']
+    tick_labels = ['0', 'π/2=1.57', 'π=3.14', '3π/2=4.71', '2π=6.28']
 
     def render_slider_ticks():
         tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-left:2%;">'
