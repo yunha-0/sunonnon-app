@@ -1,151 +1,55 @@
+import math
 import streamlit as st
 import pandas as pd
-import math
-from pathlib import Path
+import matplotlib.pyplot as plt
 
-# Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+    page_title='단위원을 통해 알아보는 sin함수와 cos함수',
+    page_icon=':abcd:'
 )
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+st.title('단위원을 통해 알아보는 sin함수와 cos함수')
+st.write('왼쪽에는 단위원을, 오른쪽에는 사인함수와 코사인함수를 나타내는 좌표평면을 표시합니다.')
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+angles = [math.radians(deg) for deg in range(0, 361)]
+values = {
+    'angle': angles,
+    'sin': [math.sin(angle) for angle in angles],
+    'cos': [math.cos(angle) for angle in angles],
+}
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
+df = pd.DataFrame(values)
 
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+col1, col2 = st.columns([1, 1])
 
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
+with col1:
+    st.subheader('단위원(unit circle)')
 
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
+    fig, ax = plt.subplots(figsize=(4, 4))
+    circle = plt.Circle((0, 0), 1, fill=False, linewidth=2, color='black')
+    ax.add_patch(circle)
+    ax.axhline(0, color='gray', linewidth=0.8)
+    ax.axvline(0, color='gray', linewidth=0.8)
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
+    ax.set_aspect('equal')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_xticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_yticks([-1, -0.5, 0, 0.5, 1])
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.set_title('단위원')
+    st.pyplot(fig)
 
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+with col2:
+    st.subheader('사인함수와 코사인함수')
 
-    return gdp_df
-
-gdp_df = get_gdp_data()
-
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
-
-
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
-
-st.header(f'GDP in {to_year}', divider='gray')
-
-''
-
-cols = st.columns(4)
-
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
-
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
-
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+    fig2, ax2 = plt.subplots(figsize=(6, 4))
+    ax2.plot(df['angle'], df['sin'], label='sin(x)', color='#1f77b4')
+    ax2.plot(df['angle'], df['cos'], label='cos(x)', color='#ff7f0e')
+    ax2.set_xlabel('각도 (rad)')
+    ax2.set_ylabel('값')
+    ax2.set_title('사인함수와 코사인함수')
+    ax2.legend()
+    ax2.grid(True, linestyle='--', alpha=0.5)
+    st.pyplot(fig2)
