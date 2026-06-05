@@ -5,7 +5,25 @@ import altair as alt
 
 st.set_page_config(
     page_title='단위원을 통해 알아보는 sin함수와 cos함수',
-    page_icon=':abcd:'
+    page_icon=':abcd:',
+    layout='wide'
+)
+
+st.markdown(
+    """
+    <style>
+    .main .block-container {
+        max-width: 90% !important;
+        width: 90% !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+    .css-1d391kg .main .block-container {
+        max-width: 90% !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 st.title('단위원을 통해 알아보는 sin함수와 cos함수')
@@ -34,7 +52,7 @@ trig_data = pd.DataFrame({
     'function': ['sin'] * len(angles) + ['cos'] * len(angles),
 })
 
-col1, col2 = st.columns([1, 3])
+col1, col2 = st.columns([1, 2], gap='large')
 
 with col1:
     st.subheader('단위원(unit circle)')
@@ -42,9 +60,9 @@ with col1:
     st.write(f'선택한 각도: {angle_deg}°  |  cos: {math.cos(angle_rad):.3f}  |  sin: {math.sin(angle_rad):.3f}')
 
     circle_chart = alt.Chart(unit_circle).mark_line(color='black').encode(
-        x=alt.X('x:Q', scale=alt.Scale(domain=[-1.3, 1.3]), axis=alt.Axis(title='x')),
-        y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.3, 1.3]), axis=alt.Axis(title='y')),
-    ).properties(width=450, height=450)
+        x=alt.X('x:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='x')),
+        y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='y')),
+    ).properties(width=650, height=650)
 
     x_axis = alt.Chart(pd.DataFrame({'x': [-1.2, 1.2], 'y': [0, 0]})).mark_rule(color='gray')
     y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.2, 1.2]})).mark_rule(color='gray')
@@ -66,6 +84,6 @@ with col2:
         x=alt.X('angle:Q', title='각도 (rad)'),
         y=alt.Y('value:Q', title='값'),
         color=alt.Color('function:N', title='함수'),
-    ).properties(width=900, height=450)
+    ).properties(width=1200, height=550)
 
     st.altair_chart(line_chart, use_container_width=True)
