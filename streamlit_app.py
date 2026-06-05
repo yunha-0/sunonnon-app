@@ -83,7 +83,6 @@ with outer_center:
     st.markdown(render_slider_ticks(), unsafe_allow_html=True)
     with slider_col:
         angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=math.pi/180)
-    st.markdown(render_slider_ticks(), unsafe_allow_html=True)
 
     # 현재 θ 값 표시
     current_theta = format_radian_label(angle_rad)
