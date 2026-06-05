@@ -62,13 +62,13 @@ with col1:
     x_axis = alt.Chart(pd.DataFrame({'x': [-1.5, 1.5], 'y': [0, 0]})).mark_rule(color='gray', size=1)
     y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.5, 1.5]})).mark_rule(color='gray', size=1)
     
-    circle_chart = alt.Chart(unit_circle).mark_line(color='black', size=3).encode(
+    circle_chart = alt.Chart(unit_circle).mark_line(color='black', strokeWidth=3, interpolate='linear').encode(
         x=alt.X('x:Q', scale=alt.Scale(domain=[-1.5, 1.5], nice=False), axis=alt.Axis(title='x')),
         y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.5, 1.5], nice=False), axis=alt.Axis(title='y')),
         order=alt.Order('angle:Q'),
-    ).properties(width=650, height=650)
+    ).properties(height=450)
 
-    radius_line_chart = alt.Chart(radius_line).mark_line(color='gray', strokeDash=[5, 5], size=2).encode(
+    radius_line_chart = alt.Chart(radius_line).mark_line(color='gray', strokeDash=[5, 5], strokeWidth=2).encode(
         x='x:Q',
         y='y:Q',
     )
@@ -77,9 +77,10 @@ with col1:
         y='y:Q',
     )
 
-    # 추가: Altair가 보이지 않을 때 대비해 SVG로도 단위원을 직접 그림
+    # SVG fallback (responsive)
     svg = f"""
-    <svg width="650" height="650" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
+    <div style="max-width:100%;">
+    <svg width="100%" height="auto" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="white" />
       <line x1="0" y1="325" x2="650" y2="325" stroke="gray" stroke-width="1" />
       <line x1="325" y1="0" x2="325" y2="650" stroke="gray" stroke-width="1" />
@@ -87,13 +88,14 @@ with col1:
       <!-- 선택점 -->
       <circle cx="{325 + math.cos(angle_rad)*200:.2f}" cy="{325 - math.sin(angle_rad)*200:.2f}" r="8" fill="red" />
     </svg>
+    </div>
     """
 
     st.markdown(svg, unsafe_allow_html=True)
 
     st.altair_chart(
-        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart),
-        use_container_width=False,
+        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart).resolve_scale(x='shared', y='shared'),
+        use_container_width=True,
     )
 
 with col2:
