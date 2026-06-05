@@ -30,28 +30,27 @@ st.title('단위원을 통해 알아보는 sin함수와 cos함수')
 
 # 라디안을 π 형태의 문자열로 변환하는 함수
 def format_radian_label(rad):
-    """라디안을 π 형태로 표시"""
+    """라디안을 가능한 한 π 형태로 표시"""
     pi_ratio = rad / math.pi
     
-    if abs(pi_ratio) < 0.01:
+    if abs(pi_ratio) < 1e-3:
         return "0"
     
-    # 간단한 분수 형태 확인 (더 많은 분모 포함)
-    for denom in [1, 2, 3, 4, 5, 6, 8]:
-        for numer in range(0, denom + 1):
-            if abs(pi_ratio - numer/denom) < 0.02:
-                if numer == 0:
-                    return "0"
-                elif numer == 1 and denom == 1:
-                    return "π"
-                elif denom == 1:
-                    return f"{numer}π"
-                else:
-                    return f"{numer}π/{denom}" if numer > 0 else "0"
+    # 자주 쓰이는 π 분수 형태를 먼저 찾는다
+    for denom in [1, 2, 3, 4, 5, 6, 8, 12, 16, 24, 36]:
+        numer = round(pi_ratio * denom)
+        if abs(pi_ratio - numer / denom) < 1e-3:
+            if numer == 0:
+                return "0"
+            if denom == 1:
+                return "π" if numer == 1 else f"{numer}π"
+            if numer == 1:
+                return f"π/{denom}"
+            return f"{numer}π/{denom}"
     
     return f"{rad:.2f}"
 
-angles = [math.radians(deg) for deg in range(0, 361)]
+angles = [i * math.pi / 180 for i in range(0, 361)]
 unit_circle = pd.DataFrame({
     'angle': angles,
     'x': [math.cos(angle) for angle in angles],
@@ -64,7 +63,7 @@ with outer_center:
     label_col, slider_col = st.columns([0.08, 0.92])
     label_placeholder = label_col.empty()
     with slider_col:
-        angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
+        angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=math.pi/180)
     label_placeholder.markdown(
         "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(16px);'>θ</h3></div>",
         unsafe_allow_html=True
@@ -154,7 +153,24 @@ with col2:
     st.subheader('sin함수와 cos함수')
 
     line_chart = alt.Chart(trig_data).mark_line().encode(
-        x=alt.X('angle_normalized:Q', title='θ'),
+        x=alt.X(
+            'angle_normalized:Q',
+            title='θ',
+            axis=alt.Axis(
+                values=[0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+                labelExpr=(
+                    "datum.value == 0 ? '0' : "
+                    "datum.value == 0.25 ? 'π/4' : "
+                    "datum.value == 0.5 ? 'π/2' : "
+                    "datum.value == 0.75 ? '3π/4' : "
+                    "datum.value == 1 ? 'π' : "
+                    "datum.value == 1.25 ? '5π/4' : "
+                    "datum.value == 1.5 ? '3π/2' : "
+                    "datum.value == 1.75 ? '7π/4' : "
+                    "datum.value == 2 ? '2π' : datum.value"
+                ),
+            )
+        ),
         y=alt.Y('value:Q', title='값'),
         color=alt.Color('function:N', title='함수'),
         tooltip=['angle_label:N', 'value:Q', 'function:N']
