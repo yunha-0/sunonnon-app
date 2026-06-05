@@ -35,16 +35,16 @@ unit_circle = pd.DataFrame({
     'y': [math.sin(angle) for angle in angles],
 })
 
-# 호도법(라디안) 슬라이더로 변경하고 왼쪽에 θ만 표시
-label_col, slider_col = st.columns([0.2, 0.8])
-label_placeholder = label_col.empty()
-with slider_col:
-    angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
-
-# 슬라이더 옆에 서브헤더 크기와 두께로 θ만 표시
-label_placeholder.markdown(
-    "<h3 style='margin:0;'>θ</h3>", unsafe_allow_html=True
-)
+# 호도법(라디안) 슬라이더를 페이지 너비 중앙에 배치하고 θ를 슬라이더 바로 옆에 표시
+outer_left, outer_center, outer_right = st.columns([1, 2, 1])
+with outer_center:
+    label_col, slider_col = st.columns([0.08, 0.92])
+    label_placeholder = label_col.empty()
+    with slider_col:
+        angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
+    label_placeholder.markdown(
+        "<h3 style='margin:0; display:inline;'>θ</h3>", unsafe_allow_html=True
+    )
 
 angle_deg = math.degrees(angle_rad)
 selected_point = pd.DataFrame({
