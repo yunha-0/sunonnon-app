@@ -22,9 +22,11 @@ st.markdown(
         max-width: 90% !important;
     }
     /* 슬라이더 크기 1.5배 증가 */
-    [data-testid="stSlider"] {
-        scale: 1.5;
+    [data-testid="stSlider"] > div > div > div {
+        transform: scale(1.5);
         transform-origin: left center;
+        width: fit-content;
+        height: fit-content;
     }
     </style>
     """,
