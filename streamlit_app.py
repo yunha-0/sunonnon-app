@@ -32,7 +32,6 @@ angles = [math.radians(deg) for deg in range(0, 361)]
 unit_circle = pd.DataFrame({
     'x': [math.cos(angle) for angle in angles],
     'y': [math.sin(angle) for angle in angles],
-    'order': list(range(len(angles))),
 })
 
 angle_deg = st.slider('특정 각도 선택', 0, 360, 45)
@@ -59,13 +58,12 @@ with col1:
     st.write('단위원은 반지름이 1인 원입니다.')
     st.write(f'선택한 각도: {angle_deg}°  |  cos: {math.cos(angle_rad):.3f}  |  sin: {math.sin(angle_rad):.3f}')
 
-    circle_chart = alt.Chart(unit_circle).mark_line(color='black', strokeWidth=2, interpolate='linear').encode(
+    circle_chart = alt.Chart(unit_circle).mark_line(color='black', strokeWidth=3, point=True, interpolate='linear').encode(
         x=alt.X('x:Q', scale=alt.Scale(domain=[-1.5, 1.5]), axis=alt.Axis(title='x')),
         y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.5, 1.5]), axis=alt.Axis(title='y')),
-        order='order:Q',
     ).properties(width=650, height=650)
 
-    circle_points_chart = alt.Chart(unit_circle).mark_circle(color='black', size=30).encode(
+    circle_points_chart = alt.Chart(unit_circle).mark_circle(color='black', size=20).encode(
         x='x:Q',
         y='y:Q',
     )
