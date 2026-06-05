@@ -35,8 +35,14 @@ unit_circle = pd.DataFrame({
     'y': [math.sin(angle) for angle in angles],
 })
 
-angle_deg = st.slider('특정 각도 선택', 0, 360, 45)
-angle_rad = math.radians(angle_deg)
+# 호도법(라디안) 슬라이더로 변경하고 왼쪽에 θ 표기 추가
+label_col, slider_col = st.columns([0.2, 0.8])
+with label_col:
+    st.markdown('θ 표기:  θ=0   |   θ=π/2   |   θ=π')
+with slider_col:
+    angle_rad = st.slider('θ (rad)', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
+
+angle_deg = math.degrees(angle_rad)
 selected_point = pd.DataFrame({
     'x': [math.cos(angle_rad)],
     'y': [math.sin(angle_rad)],
