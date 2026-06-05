@@ -35,16 +35,15 @@ unit_circle = pd.DataFrame({
     'y': [math.sin(angle) for angle in angles],
 })
 
-# 호도법(라디안) 슬라이더로 변경하고 왼쪽에 θ 표기 추가
+# 호도법(라디안) 슬라이더로 변경하고 왼쪽에 θ만 표시
 label_col, slider_col = st.columns([0.2, 0.8])
-# placeholder를 만들어 슬라이더 값 변경 시 동적으로 업데이트
 label_placeholder = label_col.empty()
 with slider_col:
-    angle_rad = st.slider('θ (rad)', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
+    angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
 
-# 슬라이더 값에 따라 바로 옆에 현재 θ 값을 표시
+# 슬라이더 옆에 서브헤더 크기와 두께로 θ만 표시
 label_placeholder.markdown(
-    f"<h3 style='display:inline; margin:0;'>θ = {angle_rad:.4f} rad</h3>"
+    "<h3 style='margin:0;'>θ</h3>", unsafe_allow_html=True
 )
 
 angle_deg = math.degrees(angle_rad)
