@@ -28,6 +28,29 @@ st.markdown(
 
 st.title('단위원을 통해 알아보는 sin함수와 cos함수')
 
+# 라디안을 π 형태의 문자열로 변환하는 함수
+def format_radian_label(rad):
+    """라디안을 π 형태로 표시"""
+    pi_ratio = rad / math.pi
+    
+    if abs(pi_ratio) < 0.01:
+        return "0"
+    
+    # 간단한 분수 형태 확인
+    for denom in [1, 2, 3, 4, 6, 8]:
+        for numer in range(0, denom + 1):
+            if abs(pi_ratio - numer/denom) < 0.05:
+                if numer == 0:
+                    return "0"
+                elif numer == 1 and denom == 1:
+                    return "π"
+                elif denom == 1:
+                    return f"{numer}π"
+                else:
+                    return f"{numer}π/{denom}" if numer > 0 else "0"
+    
+    return f"{rad:.2f}"
+
 angles = [math.radians(deg) for deg in range(0, 361)]
 unit_circle = pd.DataFrame({
     'angle': angles,
@@ -59,6 +82,8 @@ radius_line = pd.DataFrame({
 
 trig_data = pd.DataFrame({
     'angle': angles * 2,
+    'angle_normalized': [angle / math.pi for angle in angles * 2],
+    'angle_label': [format_radian_label(angle) for angle in angles * 2],
     'value': [math.sin(angle) for angle in angles] + [math.cos(angle) for angle in angles],
     'function': ['sin함수'] * len(angles) + ['cos함수'] * len(angles),
 })
@@ -111,9 +136,10 @@ with col2:
     st.subheader('sin함수와 cos함수')
 
     line_chart = alt.Chart(trig_data).mark_line().encode(
-        x=alt.X('angle:Q', title='각도 (rad)'),
+        x=alt.X('angle_normalized:Q', title='θ'),
         y=alt.Y('value:Q', title='값'),
         color=alt.Color('function:N', title='함수'),
+        tooltip=['angle_label:N', 'value:Q', 'function:N']
     ).properties(width=1200, height=550)
 
     st.altair_chart(line_chart, use_container_width=True)
