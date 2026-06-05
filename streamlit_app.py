@@ -21,6 +21,11 @@ st.markdown(
     .css-1d391kg .main .block-container {
         max-width: 90% !important;
     }
+    /* 슬라이더 크기 1.5배 증가 */
+    [data-testid="stSlider"] {
+        scale: 1.5;
+        transform-origin: left center;
+    }
     </style>
     """,
     unsafe_allow_html=True,
