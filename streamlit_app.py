@@ -31,10 +31,18 @@ st.title('단위원을 통해 알아보는 sin함수와 cos함수')
 # 라디안을 π 형태의 문자열로 변환하는 함수
 def format_radian_label(rad):
     """라디안을 가능한 한 π 형태로 표시"""
+    special_angles = {
+        0.0: '0',
+        math.pi / 2: 'π/2',
+        math.pi: 'π',
+        3 * math.pi / 2: '3π/2',
+        2 * math.pi: '2π',
+    }
+    for value, label in special_angles.items():
+        if abs(rad - value) < 1e-3:
+            return label
+
     pi_ratio = rad / math.pi
-    
-    if abs(pi_ratio) < 1e-3:
-        return "0"
     
     # 자주 쓰이는 π 분수 형태를 먼저 찾는다
     for denom in [1, 2, 3, 4, 5, 6, 8, 12, 16, 24, 36]:
@@ -86,7 +94,10 @@ with outer_center:
 
     # 현재 θ 값 표시
     current_theta = format_radian_label(angle_rad)
-    st.markdown(f"<p style='text-align:center; font-size:16px; margin-top:8px;'><strong>θ = {current_theta}</strong></p>", unsafe_allow_html=True)
+    st.markdown(
+        f"<p style='text-align:center; font-size:16px; margin-top:8px; color:red;'><strong>θ = {current_theta}</strong></p>",
+        unsafe_allow_html=True
+    )
 
 angle_deg = math.degrees(angle_rad)
 selected_point = pd.DataFrame({
