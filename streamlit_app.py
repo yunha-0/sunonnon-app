@@ -39,13 +39,12 @@ unit_circle = pd.DataFrame({
 label_col, slider_col = st.columns([0.2, 0.8])
 # placeholder를 만들어 슬라이더 값 변경 시 동적으로 업데이트
 label_placeholder = label_col.empty()
-label_placeholder.markdown('θ 표기:  θ=0   |   θ=π/2   |   θ=π')
 with slider_col:
     angle_rad = st.slider('θ (rad)', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
 
 # 슬라이더 값에 따라 바로 옆에 현재 θ 값을 표시
 label_placeholder.markdown(
-    f"θ 표기:  θ=0   |   θ=π/2   |   θ=π<br><h3 style='display:inline; margin:0;'>θ = {angle_rad:.4f} rad</h3>"
+    f"<h3 style='display:inline; margin:0;'>θ = {angle_rad:.4f} rad</h3>"
 )
 
 angle_deg = math.degrees(angle_rad)
@@ -68,8 +67,6 @@ col1, col2 = st.columns([1.15, 1.85], gap='large')
 
 with col1:
     st.subheader('단위원(unit circle)')
-    st.write('단위원은 반지름이 1인 원입니다.')
-    st.write(f'선택한 각도: {angle_deg}°  |  cos: {math.cos(angle_rad):.3f}  |  sin: {math.sin(angle_rad):.3f}')
 
     x_axis = alt.Chart(pd.DataFrame({'x': [-1.5, 1.5], 'y': [0, 0]})).mark_rule(color='gray', size=1)
     y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.5, 1.5]})).mark_rule(color='gray', size=1)
