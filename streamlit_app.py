@@ -61,6 +61,7 @@ unit_circle = pd.DataFrame({
 # 호도법(라디안) 슬라이더를 페이지 너비 중앙에 배치하고 θ를 슬라이더 바로 옆에 표시
 outer_left, outer_center, outer_right = st.columns([1, 2, 1])
 with outer_center:
+    st.markdown("**0 ~ 2π**")
     label_col, slider_col = st.columns([0.08, 0.92])
     label_placeholder = label_col.empty()
     with slider_col:
