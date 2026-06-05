@@ -90,14 +90,12 @@ with outer_center:
 
     # 슬라이더 위/아래 눈금 추가
     tick_labels = ['0', 'π/2=1.57', 'π=3.14', '3π/2=4.71', '2π=6.28']
+    tick_positions = [7, 32, 50, 57, 107]  # 백분율 위치
 
     def render_slider_ticks():
-        tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:18px; color:#666; margin-left:2%;">'
-        for i, label in enumerate(tick_labels):
-            if i == 0 or i == len(tick_labels) - 1:
-                tick_html += f'<span style="transform:translateX(0);">{label}</span>'
-            else:
-                tick_html += f'<span>{label}</span>'
+        tick_html = '<div style="position:relative; width:100%; font-size:18px; color:#666; height:30px;">'
+        for label, pos in zip(tick_labels, tick_positions):
+            tick_html += f'<span style="position:absolute; left:{pos}%; transform:translateX(-50%);">{label}</span>'
         tick_html += '</div>'
         return tick_html
 
