@@ -149,9 +149,10 @@ with col1:
     
     # 호(arc) 데이터: 단위원 데이터에서 0~angle_rad 범위의 점들을 필터링
     arc_data = unit_circle[unit_circle['angle'] <= angle_rad].copy()
-    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=5).encode(
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=12).encode(
         x='x:Q',
         y='y:Q',
+        order=alt.Order('angle:Q'),
     )
     
     selected_point_chart = alt.Chart(selected_point).mark_circle(color='red', size=140).encode(
