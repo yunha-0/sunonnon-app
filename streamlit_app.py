@@ -21,12 +21,18 @@ st.markdown(
     .css-1d391kg .main .block-container {
         max-width: 90% !important;
     }
-    /* 슬라이더 크기 1.5배 증가 */
-    [data-testid="stSlider"] > div > div > div {
-        transform: scale(1.5);
-        transform-origin: left center;
-        width: fit-content;
-        height: fit-content;
+    /* 슬라이더 높이 1.5배 증가 */
+    [data-testid="stSlider"] input[type="range"] {
+        height: 15px !important;
+        width: 100% !important;
+    }
+    [data-testid="stSlider"] input[type="range"]::-webkit-slider-thumb {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    [data-testid="stSlider"] input[type="range"]::-moz-range-thumb {
+        width: 30px !important;
+        height: 30px !important;
     }
     </style>
     """,
