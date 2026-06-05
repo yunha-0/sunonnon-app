@@ -52,7 +52,7 @@ trig_data = pd.DataFrame({
     'function': ['sin'] * len(angles) + ['cos'] * len(angles),
 })
 
-col1, col2 = st.columns([1.3, 1.7], gap='large')
+col1, col2 = st.columns([1.15, 1.85], gap='large')
 
 with col1:
     st.subheader('단위원(unit circle)')
