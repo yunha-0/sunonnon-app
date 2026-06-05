@@ -43,7 +43,7 @@ with outer_center:
     with slider_col:
         angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=0.01)
     label_placeholder.markdown(
-        "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0;'>θ</h3></div>",
+        "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(0.18rem);'>θ</h3></div>",
         unsafe_allow_html=True
     )
 
