@@ -62,18 +62,14 @@ outer_left, outer_center, outer_right = st.columns([1, 2, 1])
 with outer_center:
     label_col, slider_col = st.columns([0.08, 0.92])
     label_placeholder = label_col.empty()
-    with slider_col:
-        angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=math.pi/180)
     label_placeholder.markdown(
         "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(16px);'>θ</h3></div>",
         unsafe_allow_html=True
     )
-    
+
     # 슬라이더 위/아래 눈금 추가
     tick_labels = ['0', 'π/2', 'π', '3π/2', '2π']
-    tick_positions = [0, 25, 50, 75, 100]  # 백분율
-    
-    # 슬라이더 너비 기준 눈금 HTML 생성
+
     def render_slider_ticks():
         tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-left:2%;">'
         for i, label in enumerate(tick_labels):
@@ -83,12 +79,12 @@ with outer_center:
                 tick_html += f'<span>{label}</span>'
         tick_html += '</div>'
         return tick_html
-    
+
     st.markdown(render_slider_ticks(), unsafe_allow_html=True)
     with slider_col:
         angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=math.pi/180)
     st.markdown(render_slider_ticks(), unsafe_allow_html=True)
-    
+
     # 현재 θ 값 표시
     current_theta = format_radian_label(angle_rad)
     st.markdown(f"<p style='text-align:center; font-size:16px; margin-top:8px;'><strong>θ = {current_theta}</strong></p>", unsafe_allow_html=True)
