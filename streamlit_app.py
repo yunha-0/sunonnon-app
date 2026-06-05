@@ -77,6 +77,20 @@ with col1:
         y='y:Q',
     )
 
+    # 추가: Altair가 보이지 않을 때 대비해 SVG로도 단위원을 직접 그림
+    svg = f"""
+    <svg width="650" height="650" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="white" />
+      <line x1="0" y1="325" x2="650" y2="325" stroke="gray" stroke-width="1" />
+      <line x1="325" y1="0" x2="325" y2="650" stroke="gray" stroke-width="1" />
+      <circle cx="325" cy="325" r="200" stroke="black" stroke-width="3" fill="none" />
+      <!-- 선택점 -->
+      <circle cx="{325 + math.cos(angle_rad)*200:.2f}" cy="{325 - math.sin(angle_rad)*200:.2f}" r="8" fill="red" />
+    </svg>
+    """
+
+    st.markdown(svg, unsafe_allow_html=True)
+
     st.altair_chart(
         alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart),
         use_container_width=False,
