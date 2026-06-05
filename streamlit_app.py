@@ -69,19 +69,25 @@ with outer_center:
         unsafe_allow_html=True
     )
     
-    # 슬라이더 아래 눈금 추가
+    # 슬라이더 위/아래 눈금 추가
     tick_labels = ['0', 'π/2', 'π', '3π/2', '2π']
     tick_positions = [0, 25, 50, 75, 100]  # 백분율
     
     # 슬라이더 너비 기준 눈금 HTML 생성
-    tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-top:4px; margin-left:2%;">'
-    for i, (pos, label) in enumerate(zip(tick_positions, tick_labels)):
-        if i == 0 or i == len(tick_labels) - 1:
-            tick_html += f'<span style="transform:translateX(0);">{label}</span>'
-        else:
-            tick_html += f'<span>{label}</span>'
-    tick_html += '</div>'
-    st.markdown(tick_html, unsafe_allow_html=True)
+    def render_slider_ticks():
+        tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-left:2%;">'
+        for i, label in enumerate(tick_labels):
+            if i == 0 or i == len(tick_labels) - 1:
+                tick_html += f'<span style="transform:translateX(0);">{label}</span>'
+            else:
+                tick_html += f'<span>{label}</span>'
+        tick_html += '</div>'
+        return tick_html
+    
+    st.markdown(render_slider_ticks(), unsafe_allow_html=True)
+    with slider_col:
+        angle_rad = st.slider('', min_value=0.0, max_value=2 * math.pi, value=math.pi/4, step=math.pi/180)
+    st.markdown(render_slider_ticks(), unsafe_allow_html=True)
     
     # 현재 θ 값 표시
     current_theta = format_radian_label(angle_rad)
