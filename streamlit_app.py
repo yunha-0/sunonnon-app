@@ -148,14 +148,14 @@ with col1:
     )
     
     # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
-    # 각도에 관계없이 일정한 해상도 유지 (1도 단위)
-    num_points = max(1, int(math.degrees(angle_rad)) + 1)
-    arc_angles = [i * angle_rad / num_points for i in range(num_points + 1)] if angle_rad > 0 else [0]
+    # 1도 단위로 정밀하게 생성 (최소 2개 포인트)
+    num_degrees = max(1, int(round(math.degrees(angle_rad))))
+    arc_angles = [i * math.pi / 180 for i in range(num_degrees + 1)]
     arc_data = pd.DataFrame({
         'x': [math.cos(a) for a in arc_angles],
         'y': [math.sin(a) for a in arc_angles],
     })
-    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=4, interpolate='monotone').encode(
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=4, interpolate='linear').encode(
         x='x:Q',
         y='y:Q',
     )
