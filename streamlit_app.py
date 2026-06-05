@@ -4,11 +4,11 @@ import pandas as pd
 import altair as alt
 
 st.set_page_config(
-    page_title='단위원을 통해 알아보는 sin함수와 cos',
+    page_title='단위원을 통해 알아보는 sin함수와 cos함수',
     page_icon=':abcd:'
 )
 
-st.title('단위원을 통해 알아보는 sin함수와 cos')
+st.title('단위원을 통해 알아보는 sin함수와 cos함수')
 st.write('단위원은 반지름이 1인 원입니다. 왼쪽에는 x축과 y축 위에 반지름이 1인 원을, 오른쪽에는 단위원 크기의 약 2배 칸에 사인과 코사인 함수를 표시합니다.')
 
 angles = [math.radians(deg) for deg in range(0, 361)]
