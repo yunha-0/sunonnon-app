@@ -148,9 +148,9 @@ with col1:
     )
     
     # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
-    # 1도 단위로 정밀하게 생성 (최소 2개 포인트)
-    num_degrees = max(1, int(round(math.degrees(angle_rad))))
-    arc_angles = [i * math.pi / 180 for i in range(num_degrees + 1)]
+    # 0.1도 단위로 정밀하게 생성하여 단위원과 정확히 일치
+    max_degrees = math.degrees(angle_rad)
+    arc_angles = [i * math.pi / 1800 for i in range(int(max_degrees * 10) + 1)]  # 0.1도 단위
     arc_data = pd.DataFrame({
         'x': [math.cos(a) for a in arc_angles],
         'y': [math.sin(a) for a in arc_angles],
