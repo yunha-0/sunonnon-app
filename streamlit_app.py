@@ -147,14 +147,8 @@ with col1:
         y='y:Q',
     )
     
-    # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
-    # 0.1도 단위로 정밀하게 생성하여 단위원과 정확히 일치
-    max_degrees = math.degrees(angle_rad)
-    arc_angles = [i * math.pi / 1800 for i in range(int(max_degrees * 10) + 1)]  # 0.1도 단위
-    arc_data = pd.DataFrame({
-        'x': [math.cos(a) for a in arc_angles],
-        'y': [math.sin(a) for a in arc_angles],
-    })
+    # 호(arc) 데이터: 단위원 데이터에서 0~angle_rad 범위의 점들을 필터링
+    arc_data = unit_circle[unit_circle['angle'] <= angle_rad].copy()
     arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=4, interpolate='linear').encode(
         x='x:Q',
         y='y:Q',
