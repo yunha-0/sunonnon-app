@@ -148,12 +148,14 @@ with col1:
     )
     
     # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
-    arc_angles = [i * angle_rad / 360 for i in range(361)]  # 0에서 angle_rad까지 360개 구간으로 부드럽게
+    # 각도에 관계없이 일정한 해상도 유지 (1도 단위)
+    num_points = max(1, int(math.degrees(angle_rad)) + 1)
+    arc_angles = [i * angle_rad / num_points for i in range(num_points + 1)] if angle_rad > 0 else [0]
     arc_data = pd.DataFrame({
         'x': [math.cos(a) for a in arc_angles],
         'y': [math.sin(a) for a in arc_angles],
     })
-    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=3, interpolate='monotone').encode(
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=4, interpolate='monotone').encode(
         x='x:Q',
         y='y:Q',
     )
@@ -188,7 +190,7 @@ with col1:
     st.markdown(svg, unsafe_allow_html=True)
 
     st.altair_chart(
-        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, arc_chart, selected_point_chart).resolve_scale(x='shared', y='shared'),
+        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart, arc_chart).resolve_scale(x='shared', y='shared'),
         use_container_width=True,
     )
 
