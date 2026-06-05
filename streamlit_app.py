@@ -27,12 +27,12 @@ st.markdown(
 )
 
 st.title('단위원을 통해 알아보는 sin함수와 cos함수')
-st.write('단위원은 반지름이 1인 원입니다. 왼쪽에는 x축과 y축과 원을, 오른쪽에는 더 넓은 영역의 사인/코사인 그래프를 표시합니다.')
 
 angles = [math.radians(deg) for deg in range(0, 361)]
 unit_circle = pd.DataFrame({
     'x': [math.cos(angle) for angle in angles],
     'y': [math.sin(angle) for angle in angles],
+    'order': list(range(len(angles))),
 })
 
 angle_deg = st.slider('특정 각도 선택', 0, 360, 45)
@@ -62,6 +62,7 @@ with col1:
     circle_chart = alt.Chart(unit_circle).mark_line(color='black').encode(
         x=alt.X('x:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='x')),
         y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='y')),
+        order='order:Q',
     ).properties(width=650, height=650)
 
     x_axis = alt.Chart(pd.DataFrame({'x': [-1.2, 1.2], 'y': [0, 0]})).mark_rule(color='gray')
