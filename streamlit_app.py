@@ -49,7 +49,7 @@ radius_line = pd.DataFrame({
 trig_data = pd.DataFrame({
     'angle': angles * 2,
     'value': [math.sin(angle) for angle in angles] + [math.cos(angle) for angle in angles],
-    'function': ['sin'] * len(angles) + ['cos'] * len(angles),
+    'function': ['sin함수'] * len(angles) + ['cos함수'] * len(angles),
 })
 
 col1, col2 = st.columns([1.15, 1.85], gap='large')
@@ -99,7 +99,7 @@ with col1:
     )
 
 with col2:
-    st.subheader('사인함수와 코사인함수')
+    st.subheader('sin함수와 cos함수')
 
     line_chart = alt.Chart(trig_data).mark_line().encode(
         x=alt.X('angle:Q', title='각도 (rad)'),
