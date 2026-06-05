@@ -59,14 +59,19 @@ with col1:
     st.write('단위원은 반지름이 1인 원입니다.')
     st.write(f'선택한 각도: {angle_deg}°  |  cos: {math.cos(angle_rad):.3f}  |  sin: {math.sin(angle_rad):.3f}')
 
-    circle_chart = alt.Chart(unit_circle).mark_line(color='black').encode(
+    circle_chart = alt.Chart(unit_circle).mark_line(color='black', interpolate='linear').encode(
         x=alt.X('x:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='x')),
         y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.4, 1.4]), axis=alt.Axis(title='y')),
         order='order:Q',
     ).properties(width=650, height=650)
 
-    x_axis = alt.Chart(pd.DataFrame({'x': [-1.2, 1.2], 'y': [0, 0]})).mark_rule(color='gray')
-    y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.2, 1.2]})).mark_rule(color='gray')
+    circle_points_chart = alt.Chart(unit_circle).mark_circle(color='black', size=20).encode(
+        x='x:Q',
+        y='y:Q',
+    )
+
+    x_axis = alt.Chart(pd.DataFrame({'x': [-1.4, 1.4], 'y': [0, 0]})).mark_rule(color='gray')
+    y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.4, 1.4]})).mark_rule(color='gray')
     radius_line_chart = alt.Chart(radius_line).mark_line(color='gray', strokeDash=[5, 5]).encode(
         x='x:Q',
         y='y:Q',
@@ -76,7 +81,11 @@ with col1:
         y='y:Q',
     )
 
-    st.altair_chart(alt.layer(circle_chart, x_axis, y_axis, radius_line_chart, selected_point_chart), use_container_width=True)
+    st.altair_chart(
+        alt.layer(circle_chart, circle_points_chart, x_axis, y_axis, radius_line_chart, selected_point_chart)
+           .resolve_scale(x='shared', y='shared'),
+        use_container_width=True,
+    )
 
 with col2:
     st.subheader('사인함수와 코사인함수')
