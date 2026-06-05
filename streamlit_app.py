@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title('단위원을 통해 알아보는 sin함수와 cos함수')
-st.write('단위원은 반지름이 1인 원입니다. 왼쪽에는 x축과 y축 위에 반지름이 1인 원을, 오른쪽에는 단위원 크기의 약 2배 칸에 사인과 코사인 함수를 표시합니다.')
+st.write('단위원은 반지름이 1인 원입니다. 왼쪽에는 x축과 y축과 원을, 오른쪽에는 더 넓은 영역의 사인/코사인 그래프를 표시합니다.')
 
 angles = [math.radians(deg) for deg in range(0, 361)]
 unit_circle = pd.DataFrame({
@@ -34,7 +34,7 @@ trig_data = pd.DataFrame({
     'function': ['sin'] * len(angles) + ['cos'] * len(angles),
 })
 
-col1, col2 = st.columns([1, 2])
+col1, col2 = st.columns([1, 3])
 
 with col1:
     st.subheader('단위원(unit circle)')
@@ -42,9 +42,9 @@ with col1:
     st.write(f'선택한 각도: {angle_deg}°  |  cos: {math.cos(angle_rad):.3f}  |  sin: {math.sin(angle_rad):.3f}')
 
     circle_chart = alt.Chart(unit_circle).mark_line(color='black').encode(
-        x=alt.X('x:Q', scale=alt.Scale(domain=[-1.2, 1.2]), axis=alt.Axis(title='x')),
-        y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.2, 1.2]), axis=alt.Axis(title='y')),
-    ).properties(width=350, height=350)
+        x=alt.X('x:Q', scale=alt.Scale(domain=[-1.3, 1.3]), axis=alt.Axis(title='x')),
+        y=alt.Y('y:Q', scale=alt.Scale(domain=[-1.3, 1.3]), axis=alt.Axis(title='y')),
+    ).properties(width=450, height=450)
 
     x_axis = alt.Chart(pd.DataFrame({'x': [-1.2, 1.2], 'y': [0, 0]})).mark_rule(color='gray')
     y_axis = alt.Chart(pd.DataFrame({'x': [0, 0], 'y': [-1.2, 1.2]})).mark_rule(color='gray')
@@ -66,6 +66,6 @@ with col2:
         x=alt.X('angle:Q', title='각도 (rad)'),
         y=alt.Y('value:Q', title='값'),
         color=alt.Color('function:N', title='함수'),
-    ).properties(width=700, height=380)
+    ).properties(width=900, height=450)
 
     st.altair_chart(line_chart, use_container_width=True)
