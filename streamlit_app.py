@@ -36,10 +36,10 @@ def format_radian_label(rad):
     if abs(pi_ratio) < 0.01:
         return "0"
     
-    # 간단한 분수 형태 확인
-    for denom in [1, 2, 3, 4, 6, 8]:
+    # 간단한 분수 형태 확인 (더 많은 분모 포함)
+    for denom in [1, 2, 3, 4, 5, 6, 8]:
         for numer in range(0, denom + 1):
-            if abs(pi_ratio - numer/denom) < 0.05:
+            if abs(pi_ratio - numer/denom) < 0.02:
                 if numer == 0:
                     return "0"
                 elif numer == 1 and denom == 1:
@@ -69,6 +69,24 @@ with outer_center:
         "<div style='display:flex; align-items:center; height:100%;'><h3 style='margin:0; transform: translateY(16px);'>θ</h3></div>",
         unsafe_allow_html=True
     )
+    
+    # 슬라이더 아래 눈금 추가
+    tick_labels = ['0', 'π/2', 'π', '3π/2', '2π']
+    tick_positions = [0, 25, 50, 75, 100]  # 백분율
+    
+    # 슬라이더 너비 기준 눈금 HTML 생성
+    tick_html = '<div style="display:flex; justify-content:space-between; width:100%; font-size:12px; color:#666; margin-top:4px; margin-left:2%;">'
+    for i, (pos, label) in enumerate(zip(tick_positions, tick_labels)):
+        if i == 0 or i == len(tick_labels) - 1:
+            tick_html += f'<span style="transform:translateX(0);">{label}</span>'
+        else:
+            tick_html += f'<span>{label}</span>'
+    tick_html += '</div>'
+    st.markdown(tick_html, unsafe_allow_html=True)
+    
+    # 현재 θ 값 표시
+    current_theta = format_radian_label(angle_rad)
+    st.markdown(f"<p style='text-align:center; font-size:16px; margin-top:8px;'><strong>θ = {current_theta}</strong></p>", unsafe_allow_html=True)
 
 angle_deg = math.degrees(angle_rad)
 selected_point = pd.DataFrame({
