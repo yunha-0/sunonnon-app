@@ -146,12 +146,30 @@ with col1:
         x='x:Q',
         y='y:Q',
     )
+    
+    # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
+    arc_angles = [i * angle_rad / 100 for i in range(101)]  # 0에서 angle_rad까지 100개 구간
+    arc_data = pd.DataFrame({
+        'x': [math.cos(a) for a in arc_angles],
+        'y': [math.sin(a) for a in arc_angles],
+    })
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=3).encode(
+        x='x:Q',
+        y='y:Q',
+    )
+    
     selected_point_chart = alt.Chart(selected_point).mark_circle(color='red', size=140).encode(
         x='x:Q',
         y='y:Q',
     )
 
     # SVG fallback (responsive)
+    # 호의 끝점 계산
+    arc_end_x = 325 + math.cos(angle_rad) * 200
+    arc_end_y = 325 - math.sin(angle_rad) * 200
+    # large-arc-flag: 각도가 π보다 크면 1, 아니면 0
+    large_arc_flag = 1 if angle_rad > math.pi else 0
+    
     svg = f"""
     <div style="max-width:100%;">
     <svg width="100%" height="auto" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
@@ -159,6 +177,8 @@ with col1:
       <line x1="0" y1="325" x2="650" y2="325" stroke="gray" stroke-width="1" />
       <line x1="325" y1="0" x2="325" y2="650" stroke="gray" stroke-width="1" />
       <circle cx="325" cy="325" r="200" stroke="black" stroke-width="3" fill="none" />
+      <!-- 호 (0에서 현재 각도까지) -->
+      <path d="M 525 325 A 200 200 0 {large_arc_flag} 1 {arc_end_x:.2f} {arc_end_y:.2f}" stroke="red" stroke-width="3" fill="none" />
       <!-- 선택점 -->
       <circle cx="{325 + math.cos(angle_rad)*200:.2f}" cy="{325 - math.sin(angle_rad)*200:.2f}" r="8" fill="red" />
     </svg>
@@ -168,7 +188,7 @@ with col1:
     st.markdown(svg, unsafe_allow_html=True)
 
     st.altair_chart(
-        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart).resolve_scale(x='shared', y='shared'),
+        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, arc_chart, selected_point_chart).resolve_scale(x='shared', y='shared'),
         use_container_width=True,
     )
 
