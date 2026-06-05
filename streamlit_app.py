@@ -148,12 +148,12 @@ with col1:
     )
     
     # 호(arc) 데이터: 0에서 현재 각도까지의 호를 따라 점들을 생성
-    arc_angles = [i * angle_rad / 100 for i in range(101)]  # 0에서 angle_rad까지 100개 구간
+    arc_angles = [i * angle_rad / 360 for i in range(361)]  # 0에서 angle_rad까지 360개 구간으로 부드럽게
     arc_data = pd.DataFrame({
         'x': [math.cos(a) for a in arc_angles],
         'y': [math.sin(a) for a in arc_angles],
     })
-    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=3).encode(
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=3, interpolate='monotone').encode(
         x='x:Q',
         y='y:Q',
     )
