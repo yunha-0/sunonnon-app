@@ -161,7 +161,28 @@ with col1:
         y='y:Q',
     )
 
-    # 차트 레이어 순서: 축, 단위원(검은 원), 빨간 호, 반지름선(점선), 선택점(빨강)
+        # SVG fallback: Altair가 제대로 보이지 않을 때도 단위원 영역이 표시되도록 함
+        arc_end_x = 325 + math.cos(angle_rad) * 200
+        arc_end_y = 325 - math.sin(angle_rad) * 200
+        large_arc_flag = 1 if angle_rad > math.pi else 0
+        svg = f"""
+        <div style="max-width:100%;">
+        <svg width="100%" height="auto" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="white" />
+            <line x1="0" y1="325" x2="650" y2="325" stroke="gray" stroke-width="1" />
+            <line x1="325" y1="0" x2="325" y2="650" stroke="gray" stroke-width="1" />
+            <circle cx="325" cy="325" r="200" stroke="black" stroke-width="3" fill="none" />
+            <!-- 호 (0에서 현재 각도까지) -->
+            <path d="M 525 325 A 200 200 0 {large_arc_flag} 1 {arc_end_x:.2f} {arc_end_y:.2f}" stroke="red" stroke-width="6" fill="none" />
+            <!-- 선택점 -->
+            <circle cx="{325 + math.cos(angle_rad)*200:.2f}" cy="{325 - math.sin(angle_rad)*200:.2f}" r="8" fill="red" />
+        </svg>
+        </div>
+        """
+
+        st.markdown(svg, unsafe_allow_html=True)
+
+        # 차트 레이어 순서: 축, 단위원(검은 원), 빨간 호, 반지름선(점선), 선택점(빨강)
     layered = alt.layer(
         x_axis,
         y_axis,
