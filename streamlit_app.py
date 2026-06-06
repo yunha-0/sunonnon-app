@@ -149,45 +149,29 @@ with col1:
     
     # 호(arc) 데이터: 단위원 데이터에서 0~angle_rad 범위의 점들을 필터링
     arc_data = unit_circle[unit_circle['angle'] <= angle_rad].copy()
-    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=12).encode(
+    # 빨간 호: 단위원 위에 덧그려지는 빨간색 호(두께 조정)
+    arc_chart = alt.Chart(arc_data).mark_line(color='red', strokeWidth=6, opacity=1).encode(
         x='x:Q',
         y='y:Q',
         order=alt.Order('angle:Q'),
     )
-    
+
     selected_point_chart = alt.Chart(selected_point).mark_circle(color='red', size=140).encode(
         x='x:Q',
         y='y:Q',
     )
 
-    # SVG fallback (responsive)
-    # 호의 끝점 계산
-    arc_end_x = 325 + math.cos(angle_rad) * 200
-    arc_end_y = 325 - math.sin(angle_rad) * 200
-    # large-arc-flag: 각도가 π보다 크면 1, 아니면 0
-    large_arc_flag = 1 if angle_rad > math.pi else 0
-    
-    svg = f"""
-    <div style="max-width:100%;">
-    <svg width="100%" height="auto" viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="white" />
-      <line x1="0" y1="325" x2="650" y2="325" stroke="gray" stroke-width="1" />
-      <line x1="325" y1="0" x2="325" y2="650" stroke="gray" stroke-width="1" />
-      <circle cx="325" cy="325" r="200" stroke="black" stroke-width="3" fill="none" />
-      <!-- 호 (0에서 현재 각도까지) -->
-      <path d="M 525 325 A 200 200 0 {large_arc_flag} 1 {arc_end_x:.2f} {arc_end_y:.2f}" stroke="red" stroke-width="3" fill="none" />
-      <!-- 선택점 -->
-      <circle cx="{325 + math.cos(angle_rad)*200:.2f}" cy="{325 - math.sin(angle_rad)*200:.2f}" r="8" fill="red" />
-    </svg>
-    </div>
-    """
+    # 차트 레이어 순서: 축, 단위원(검은 원), 빨간 호, 반지름선(점선), 선택점(빨강)
+    layered = alt.layer(
+        x_axis,
+        y_axis,
+        circle_chart,
+        arc_chart,
+        radius_line_chart,
+        selected_point_chart,
+    ).resolve_scale(x='shared', y='shared')
 
-    st.markdown(svg, unsafe_allow_html=True)
-
-    st.altair_chart(
-        alt.layer(x_axis, y_axis, circle_chart, radius_line_chart, selected_point_chart, arc_chart).resolve_scale(x='shared', y='shared'),
-        use_container_width=True,
-    )
+    st.altair_chart(layered, use_container_width=True)
 
 with col2:
     st.subheader('sin함수와 cos함수')
